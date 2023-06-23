@@ -10,11 +10,16 @@ const displayValidity = (field) => {
   field.input.classList.remove('is-valid,', 'is-invalid');
   field.input.classList.add(problems.length === 0 ? 'is-valid' : 'is-invalid');
   field.feedback.replaceChildren();
+  console.log(problems);
+  if (field === password && problems[0] !== "Password cannot be empty") {
+    let remainingProbs = problems.length - 1;
+    field.feedback.append(addPasswordExplanation(remainingProbs));
+  }
   problems.map((message) => {
     const text = document.createElement('small');
     text.textContent = message;
     return text;
-  }).map((text) => field.feedback.append(text));
+  }).forEach((text) => field.feedback.append(text));
 };
 
 export const password = {
@@ -37,3 +42,9 @@ form.onsubmit = (e) => {
   displayValidity(email);
 }
 
+// janky password explanation para
+let addPasswordExplanation = (remainingProbs) => {
+  let explanationEl = document.createElement("small");
+  explanationEl.textContent = `Your password must contain ${remainingProbs} more of these criteria: `
+  return explanationEl;
+}
